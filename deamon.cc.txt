@@ -1,0 +1,26 @@
+#include <iostream>
+#include <thread>
+#include <chrono>
+
+using namespace std::chrono_literals;
+
+template <typename TIME>
+void deamon(int number, TIME time) {
+	for (int i = 0; i < number; ++i) {
+		std::cout << "Hi I'm thread with id: " << std::this_thread::get_id() << " Number: " << number << std::endl;
+		std::this_thread::sleep_for(time);
+	}
+}
+
+int main() {
+	std::thread t1(deamon<decltype(1s)>, 20, 1s);
+	std::thread t2(deamon<decltype(1500ms)>, 15, 1500ms);
+	std::thread t3(deamon<decltype(2700ms)>, 10, 2700ms);
+
+	t1.detach();
+	t2.detach();
+	t3.detach();
+
+	deamon(4, 7s);
+	return 0;
+}
